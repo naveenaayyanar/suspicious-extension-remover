@@ -10,3 +10,13 @@ Our Cybersecurity Odyssey
 - 📈 Monitored performance and browsing experience improvements  
 
  Extensions Removed
+
+Name:
+
+Reason for Removal
+
+FakeAdBlocker++ - Excessive data collection and intrusive ads
+
+SearchHijackerX - Silent homepage hijacking
+
+Unknown Helper - Unknown developer and security risks
