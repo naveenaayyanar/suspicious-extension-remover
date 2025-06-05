@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Browser Extension Safety Checker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        h1 {
+            margin-bottom: 0.25rem;
+        }
+        p.description {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: #dcdcdc;
+        }
+        .warning {
+            background-color: rgba(255, 69, 58, 0.9);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            max-width: 600px;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+        button {
+            background: #ff6f61;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        button:hover {
+            background: #d94f43;
+        }
+        ul.extension-list {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            list-style-type: none;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        ul.extension-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        footer {
+            margin-top: auto;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            p.description, .warning, ul.extension-list {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Browser Extension Safety Checker</h1>
+    <p class="description">
+        This demo shows a list of your currently enabled browser extensions (if accessible).  
+        For security reasons, browsers limit direct extension info access.  
+        Use your browser's extension manager with the provided guides to inspect and remove suspicious add-ons safely.
+    </p>
+    <div class="warning">
+        ⚠️ Note: This demo cannot detect all extensions or verify their safety.  
+        Always review permissions and user reviews before installing.
+    </div>
+    <button onclick="checkExtensions()">Show My Extensions</button>
+    <ul class="extension-list" id="extensionList">
+        <li><em>Click the button above to load extension info if available.</em></li>
+    </ul>
+<script>
+    function checkExtensions() {
+        const extensionList = document.getElementById('extensionList');
+        extensionList.innerHTML = '';
+
+        if (typeof chrome !== 'undefined' && chrome.management) {
+            // Chrome-based browsers with management permission (mostly extensions themselves)
+            chrome.management.getAll(function(extensions) {
+                if (extensions.length === 0) {
+                    extensionList.innerHTML = '<li>No extensions found or permission denied.</li>';
+                } else {
+                    extensions.forEach(ext => {
+                        if(ext.enabled){
+                            let li = document.createElement('li');
+                            li.textContent = ext.name + (ext.mayDisable ? ' (Can be disabled)' : '');
+                            extensionList.appendChild(li);
+                        }
+                    });
+                }
+            });
+        } else {
+            // Inform users about manual steps for most browsers
+            extensionList.innerHTML = '<li>Extension info cannot be accessed from this page due to browser security restrictions.</li><li>Please use your browser\'s extension/add-ons menu to view and manage your extensions safely.</li>';
+        }
+    }
+</script>
+<footer>
+    &copy; 2024 Safe Browsing Project
+</footer>
+</body>
+</html>
